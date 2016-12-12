@@ -1,42 +1,43 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout
-from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout, QBoxLayout
-from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout
+from PyQt5.QtCore import pyqtSlot, QTimer
 import sys
-
-# QApplication -> only one instance , manage events
-# manages the GUI app control flow and main settings.\n"
-# QWidget -> Base class for applicatios
-# sys -> system module Gives system specific parameters and function
-# QPushButton -> Button Class
 
 
 class App(QWidget):
     """
-    Main class of the app defines the window title,size atm.
+    Main class of the app defines the window title,size and Layouts
     """
     def __init__(self):
         super().__init__()
-
-        # set the window title
-        self.title = 'Pomodoro'
 
         # set the window co-ords
         self.start = 10
         self.ht, self.wt = 200, 320
         self.number = 100
 
+        # Create Timer
+        self.timer = QTimer()
+
         # Create horizontal layout and buttons
-        self.layout = QHBoxLayout()
-        self.HorizontalLayout()
+        self.Hlayout = QHBoxLayout()
+
+        # Add Buttons to the HorizontalLayout
+        self.addButtonsHlayout()
 
         # Create a lcd timer
         self.num = QLCDNumber()
-#        self.LCDupdate()
 
         # Create a main vertial layout
         self.Vlayout = QVBoxLayout()
+
+        # Add LCDTimer to the layout
         self.Vlayout.addWidget(self.num)
-        self.Vlayout.addLayout(self.layout)
+
+        # Add HorizontalLayout to Layout
+        self.Vlayout.addLayout(self.Hlayout)
+
+        # Set the layout of the App
         self.setLayout(self.Vlayout)
 
         # call the main function which will init the app
@@ -46,38 +47,37 @@ class App(QWidget):
         """
         Initialize the window with the parameters given in __init__
         """
-        self.setWindowTitle(self.title)
+        self.setWindowTitle("Pomodoro")
         self.setGeometry(self.start, self.start, self.wt, self.ht)
         self.show()
 
-    def HorizontalLayout(self):
+    def addButtonsHlayout(self):
         """
-        Create a horizontal layout and add start and stop buttons
+        Add Buttons to the horizontal layout
         """
         # Create the two buttons
         buttonStart = QPushButton('Start', self)
         buttonStop = QPushButton('Stop', self)
 
+        # buttonClicked
+        buttonStart.clicked.connect(self._buttonClicked)
+
         # Add buttons to the layout
-        self.layout.addWidget(buttonStart)
-        self.layout.addWidget(buttonStop)
+        self.Hlayout.addWidget(buttonStart)
+        self.Hlayout.addWidget(buttonStop)
 
-    def LCDupdate(self):
-        """
-        Call the update funtion to decrement the value and
-        display the updated value
-        """
-        self.num.display(self.number)
-        self.update()
-
-    def update(self):
+    def updateLCD(self):
         """
         Update the timer on the LCDdisplay
         """
-        if (self.number == 0):
-            self.number = 100
-        else:
-            self.number -= 1
+        self.number -= 1
+        self.num.display(self.number)
+        if(self.number != 0):
+            self.timer.singleShot(1000, self.updateLCD)
+
+    @pyqtSlot()
+    def _buttonClicked(self):
+        self.timer.singleShot(1000, self.updateLCD)
 
 
 if __name__ == "__main__":
@@ -85,4 +85,6 @@ if __name__ == "__main__":
 
     # create a object of the class APP
     ex = App()
+
+    # Execute the App
     sys.exit(app.exec_())
