@@ -31,7 +31,7 @@ class App(QWidget):
 
         # Create a lcd timer
         self.num = QLCDNumber()
-        self.LCDdisplay()
+#        self.LCDupdate()
 
         # Create a main vertial layout
         self.Vlayout = QVBoxLayout()
