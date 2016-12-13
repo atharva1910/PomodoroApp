@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout
 from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout
-from PyQt5.QtCore import pyqtSlot, QTimer, QTime
+from PyQt5.QtCore import pyqtSlot, QTimer
 import sys
 
 
@@ -60,23 +60,28 @@ class App(QWidget):
         Add Buttons to the horizontal layout
         """
         # Create the two buttons
-        buttonStart = QPushButton('Start', self)
-        buttonStop = QPushButton('Stop', self)
+        self.buttonStart = QPushButton('Start', self)
+        self.buttonStop = QPushButton('Stop', self)
 
         # buttonClicked
-        buttonStart.clicked.connect(self._startClicked)
-        buttonStop.clicked.connect(self._stopClicked)
+        self.buttonStart.clicked.connect(self._startClicked)
+        self.buttonStop.clicked.connect(self._stopClicked)
 
         # Add buttons to the layout
-        self.Hlayout.addWidget(buttonStart)
-        self.Hlayout.addWidget(buttonStop)
+        self.Hlayout.addWidget(self.buttonStart)
+        self.Hlayout.addWidget(self.buttonStop)
 
     def updateLCD(self):
         """
         Update the timer on the LCDdisplay
         """
         self.num.display(str(self.minutes) + ":" + str(self.seconds).zfill(2))
-        if(self.number != 0):
+        if(self.seconds == 0):
+            self.seconds = 59
+            self.minutes -= 1
+        else:
+            self.seconds -= 1
+        if(self.minutes != 0 and self.seconds != 0):
             self.timer.singleShot(1000, self.updateLCD)
 
     @pyqtSlot()
@@ -91,7 +96,7 @@ class App(QWidget):
         """
         When stop Button is clicked exit app
         """
-        sys.exit()
+        
 
 
 if __name__ == "__main__":
