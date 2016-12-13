@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout
-from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout
+from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout, QMessageBox
 from PyQt5.QtCore import pyqtSlot, QTimer
 import sys
 
@@ -16,7 +16,7 @@ class App(QWidget):
         self.ht, self.wt = 200, 320
         self.number = 31*60
         self.hours = 00
-        self.minutes = 31
+        self.minutes = 1
         self.seconds = 00
 
         # Create Timer
@@ -75,14 +75,21 @@ class App(QWidget):
         """
         Update the timer on the LCDdisplay
         """
+        # Display on the LCD timer in terms of mm:ss
         self.num.display(str(self.minutes) + ":" + str(self.seconds).zfill(2))
+
+        # Decrement the timer
         if(self.seconds == 0):
             self.seconds = 59
             self.minutes -= 1
         else:
             self.seconds -= 1
-        if(self.minutes != 0 and self.seconds != 0):
+        if(self.minutes != 0 or self.seconds != 0):
+            # update the LCD timer
             self.timer.singleShot(1000, self.updateLCD)
+        else:
+            # Start the interval for 8 minutes
+            self.timer.singleShot(1000, self.intervalLCD)
 
     @pyqtSlot()
     def _startClicked(self):
@@ -96,7 +103,14 @@ class App(QWidget):
         """
         When stop Button is clicked exit app
         """
-        
+        sys.exit()
+
+    def intervalLCD(self):
+        """
+        Start the interval timer
+        """
+        self.minutes = 4
+        self.timer.singleShot(1000, self.updateLCD)
 
 
 if __name__ == "__main__":
