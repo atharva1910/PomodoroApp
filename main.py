@@ -64,7 +64,8 @@ class App(QWidget):
         buttonStop = QPushButton('Stop', self)
 
         # buttonClicked
-        buttonStart.clicked.connect(self._buttonClicked)
+        buttonStart.clicked.connect(self._startClicked)
+        buttonStop.clicked.connect(self._stopClicked)
 
         # Add buttons to the layout
         self.Hlayout.addWidget(buttonStart)
@@ -79,11 +80,18 @@ class App(QWidget):
             self.timer.singleShot(1000, self.updateLCD)
 
     @pyqtSlot()
-    def _buttonClicked(self):
+    def _startClicked(self):
         """
         When Button is clicked Start the countDown
         """
         self.timer.singleShot(1000, self.updateLCD)
+
+    @pyqtSlot()
+    def _stopClicked(self):
+        """
+        When stop Button is clicked exit app
+        """
+        sys.exit()
 
 
 if __name__ == "__main__":
