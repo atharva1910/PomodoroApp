@@ -15,7 +15,6 @@ class App(QWidget):
         # set the window co-ords and the timer constants
         self.start = 10
         self.ht, self.wt = 200, 320
-        self.number = 31*60
         self.minutes = 31
         self.seconds = 0
 
