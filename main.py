@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout
-from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout
 from PyQt5.QtCore import pyqtSlot, QTimer
+from PyQt5.QtMultimedia import QSound
 import sys
 
 
@@ -15,9 +16,8 @@ class App(QWidget):
         self.start = 10
         self.ht, self.wt = 200, 320
         self.number = 31*60
-        self.hours = 00
-        self.minutes = 1
-        self.seconds = 00
+        self.minutes = 0
+        self.seconds = 4
 
         # Create Timer
         self.timer = QTimer()
@@ -109,6 +109,7 @@ class App(QWidget):
         """
         Start the interval timer
         """
+        QSound.play("audio/ding.wav")
         self.minutes = 4
         self.timer.singleShot(1000, self.updateLCD)
 
