@@ -32,7 +32,6 @@ class App(QWidget):
 
         # Create a lcd timer
         self.num = QLCDNumber()
-        self.num.setNumDigits(8)
 
         # Create a main vertial layout
         self.Vlayout = QVBoxLayout()
