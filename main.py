@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout
 from PyQt5.QtWidgets import QLCDNumber, QVBoxLayout
 from PyQt5.QtCore import pyqtSlot, QTimer
 from PyQt5.QtMultimedia import QSound
-from PyQt5.QtGui import QIcon
 import sys
 
 
@@ -91,9 +90,12 @@ class App(QWidget):
         if(self.minutes != 0 or self.seconds != 0):
             # update the LCD timer
             self.timer.singleShot(1000, self.updateLCD)
-        else:
-            # Start the interval for 8 minutes
+        elif(not(self.inInterval)):
+            # Start the interval for 8 minutes if not already in Interval
             self.timer.singleShot(1000, self.intervalLCD)
+        else:
+            # Show dialog box for restart
+            sys.exit()   # temporary
 
     @pyqtSlot()
     def _startClicked(self):
